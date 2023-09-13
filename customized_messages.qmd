@@ -1,0 +1,53 @@
+---
+title: "customized message to a list of individuals"
+format: html
+---
+
+```{r}
+suppressPackageStartupMessages(library(glue))
+suppressPackageStartupMessages(library(tidyverse))
+library(quarto)
+source("send_gmail.R")
+```
+
+Create a list of recipients and their area of interest
+```{r}
+email_list <- tribble(
+  ~name, ~email_address, ~cylinder_interest,
+  "George", "george@gmail.com", 4,
+  "Jane", "jane@yahoo.com", 6,
+  "Frank", "frank@hotmail.com", 8
+)
+
+source("real_emails_list.R")
+
+prepped_mtcars <- mtcars |> 
+  rownames_to_column("vehicle_name") |> 
+  summarise(mean_mpg = mean(mpg), 
+            mean_hp = mean(hp),
+            n_cars = n(),
+            .by = c(cyl))
+```
+
+```{r}
+
+ready_to_send <- email_list |>
+  left_join(prepped_mtcars, by = c("cylinder_interest" = "cyl")) |>
+  mutate(
+    subject = glue("Report on vehicles with {cylinder_interest} cylinders"),
+    body = glue(
+      "Hi {name}, <br><br>There are {n_cars} vehicles with {cylinder_interest} cylinders.  <br><br>Their average miles per gallon is {mean_mpg}.<br><br>Also, the mean horsepower for those vehicles is {mean_hp})"
+    )
+  )
+
+ready_to_send |>
+  mutate(x = pmap(
+    list(email_address, 
+         "john.smith@shambhala.info", 
+         subject, 
+         body),
+    .f = send_gmail
+  ))
+
+```
+

@@ -1,0 +1,46 @@
+---
+title: "Send a rendered report"
+format: html
+---
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(gmailr))
+suppressPackageStartupMessages(library(quarto))
+suppressPackageStartupMessages(library(here))
+
+source("send_gmail.R")
+
+```
+
+In the following code:
+
+-   The `input` parameter points to the Quarto file that you want to render and send. That file needs to have certain YAML parameters, as follows, so that graphs are embedded in the HTML:
+
+    +---------------------------+
+    | ```                       |
+    | format:                   |
+    |   html:                   |
+    |     embed-resources: true |
+    | ```                       |
+    +---------------------------+
+
+-   The `output_format` parameter seems to be necessary if the `.qmd` file is going to generate graphics, specifically, even though `html` is specified in the report's YAML.
+
+-   The `output_file` allows for different versions of the output to be sent, for example, to different audiences.
+
+```{r}
+quarto::quarto_render(input = "quarto_default.qmd", 
+                      output_format = "html", 
+                      output_file = "ready_to_send.html")
+```
+
+```{r}
+body <- as.character(read_file(here("ready_to_send.html")))
+send_gmail(
+  "someone@gmail.com",
+  "someone.else@gmail.com", 
+  "Here is a quarto report with graphs embedded",
+  body
+)
+```

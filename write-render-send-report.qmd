@@ -1,0 +1,63 @@
+---
+title: "Write and render a .qmd file"
+format:
+  html:  
+    embed-resources: true
+---
+
+```{r}
+library(tidyverse)
+library(quarto)
+library(gmailr)
+source("send_gmail.R")
+
+tab_char <- "    "
+tab_char_2 <- "     -    "
+
+```
+
+```{r}
+grouped_mt_cars <- rownames_to_column(mtcars, "Car_Name") |> 
+  arrange(cyl, mpg) |> 
+  mutate(mpg_rank = dense_rank(mpg), .by = cyl) |> 
+  filter(mpg_rank < 4)
+
+# grouped_mt_cars
+```
+
+```{r}
+zz <- file("mpg_report.qmd", "w")  # open an output file connection
+
+header <- paste0("# Fuel Efficient cars by Cylinder size\n\n")
+
+cat(header, file = zz)
+
+cat("Some discussion about relevance would go here... \n\n", file = zz)
+
+report_ready <- grouped_mt_cars |> 
+  mutate(report_line = case_when(
+    mpg_rank == 1 ~ paste0(
+      "\n\n-", tab_char, "**Here are the most fuel-efficient vehicles with ",
+      cyl,
+      " cylinders:**\n\n",
+      tab_char_2, Car_Name, " averages ", mpg, " miles per gallon."),
+    TRUE ~ paste0(
+      tab_char_2, Car_Name, " averages ", mpg, " miles per gallon.")
+  ))
+
+char_vec <- paste(report_ready$report_line, collapse = "\n")
+writeLines(char_vec, con = zz, sep = "\n")
+
+close(zz)
+```
+
+```{r}
+quarto::quarto_render("mpg_report.qmd", output_format = "html")
+```
+
+```{r}
+body <- read_file("mpg_report.html")
+send_gmail("someone@gmail.com", "someone.else@gmail.com", "Here is the report you requested", body)
+
+```
+

@@ -1,0 +1,31 @@
+# Fuel Efficient cars by Cylinder size
+
+Some discussion about relevance would go here... 
+
+
+
+-    **Here are the most fuel-efficient vehicles with 4 cylinders:**
+
+     -    Volvo 142E averages 21.4 miles per gallon.
+     -    Toyota Corona averages 21.5 miles per gallon.
+     -    Datsun 710 averages 22.8 miles per gallon.
+     -    Merc 230 averages 22.8 miles per gallon.
+
+
+-    **Here are the most fuel-efficient vehicles with 6 cylinders:**
+
+     -    Merc 280C averages 17.8 miles per gallon.
+     -    Valiant averages 18.1 miles per gallon.
+     -    Merc 280 averages 19.2 miles per gallon.
+
+
+-    **Here are the most fuel-efficient vehicles with 8 cylinders:**
+
+     -    Cadillac Fleetwood averages 10.4 miles per gallon.
+
+
+-    **Here are the most fuel-efficient vehicles with 8 cylinders:**
+
+     -    Lincoln Continental averages 10.4 miles per gallon.
+     -    Camaro Z28 averages 13.3 miles per gallon.
+     -    Duster 360 averages 14.3 miles per gallon.

@@ -1,0 +1,26 @@
+---
+title: "Simple HTML example"
+format: html
+---
+```{r}
+library(quarto)
+
+source("send_gmail.R")
+```
+
+```{r}
+send_gmail(
+   "someone@gmail.com",
+  "someone.else@sgmail.com", 
+  "Here is a minimal example of a message",
+  "Plain text with no header is possible, but it gets interpreted as HTML.
+  <p>This is the simplest possible HTML example.</p>
+  lists and stuff
+  <ul>
+  <li>are easy...
+  <li>with minimal code.
+  </ul>
+  <br>
+  Writing raw HTML can be tiresom, however.
+  <p>The Rstudio / Quarto partnership is the easiest way to generate a bunch of html without having to think about it.  Use the visual editor, render the .qmd file, fish out the generated html code at the bottom of the page, and send that.")
+```
